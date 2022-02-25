@@ -13,3 +13,7 @@ function Test-Output {
     Write-Output "This is a test"
 }
 ```
+
+embedding a gist:
+
+{% gist 7470268 %}
