@@ -7,3 +7,9 @@ function test() {
     console.log("This is a test");
 }
 ```
+
+```powershell
+function Test-Output {
+    Write-Output "This is a test"
+}
+```
