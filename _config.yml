@@ -1,3 +1,27 @@
 theme: jekyll-theme-hacker
-title: TK's Notebook
+title: "TK's Notebook"
+author: "Tim Kennedy"
 description: I forget stuff if I don't write it down
+
+email: "tim@timkennedy.net"
+
+rss: rss
+
+kramdown:
+  syntax_highlighter_opts:
+    disable: true
+    
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+
+titles_from_headings:
+  strip_title: true
+  collections: true
+
+defaults:
+  - scope:
+      path: ""
+      type: post
+    values:
+      tags: Other
