@@ -21,6 +21,9 @@ highlighter: rouge
 
 rss: rss
 
+header_pages:
+  - about.md
+  - archive.md
     
 plugins:
   - jekyll-feed
