@@ -6,7 +6,7 @@ In my professional life I am essentially a "Solutions Architect", but which I me
 in networking, storage systems, various server operating systems, and various virtualization technologies to design
 solutions to business needs.  
 
-I believe that automation is the key to predictable and repeatable outcomes, and I my main goal at any job is to
+I believe that automation is the key to predictable and repeatable outcomes, and my main goal at any job is to
 automate my way out of that job.
 
 This blog probably won't have any of the big design solutions I've worked on for employers, but will instead have 
