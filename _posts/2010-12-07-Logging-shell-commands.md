@@ -17,9 +17,9 @@ Using syslogging shells is simply a tool like any other.  It doesn't replace rea
 
 GNU Bash 4.1 has all the code to enable command logging, simply by editing the config-top.h file.
 
-#### Just Change:
+Just Change:
 
-```c
+```
 /* Define if you want each line saved to the history list in bashhist.c:
    bash_add_history() to be sent to syslog(). */
 /* #define SYSLOG_HISTORY */ 
@@ -29,9 +29,9 @@ GNU Bash 4.1 has all the code to enable command logging, simply by editing the c
 #endif
 ```
 
-#### to
+to
 
-```c
+```
 /* Define if you want each line saved to the history list in bashhist.c:
    bash_add_history() to be sent to syslog(). */
 #define SYSLOG_HISTORY 
@@ -44,7 +44,7 @@ GNU Bash 4.1 has all the code to enable command logging, simply by editing the c
 and BOOM, all commands run in bash, by any user are logged to syslog, and can now easily be offloaded from the system in realtime by using a remote syslog server.
 
 One thing I did notice is that in Solaris, the PID was being logged with the log entry to syslog, however this was not the case in linux.  Rather the PID was being logged by the log entry %s itself.
-```c
+```
 if (strlen(line) < SYSLOG_MAXLEN)
     syslog (SYSLOG_FACILITY|SYSLOG_LEVEL, "HISTORY: PID=%d UID=%d %s", 
  getpid(), current_user.uid, line);
@@ -56,7 +56,7 @@ Dec  7 23:13:02 linux bash: HISTORY: PID=1752 UID=1001 ls
 ```
 
 I don't really like that format, either. I'd rather see usernames and commands, and have the pid over on the left with the 'bash:'. This was a pretty simple change in code to:
-```c
+```
  openlog("bash",LOG_PID,SYSLOG_FACILITY);
   if (strlen(line) < SYSLOG_MAXLEN)
     syslog (SYSLOG_LEVEL, "[%s] %s", current_user.user_name, line);
