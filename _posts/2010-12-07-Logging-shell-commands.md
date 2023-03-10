@@ -1,4 +1,11 @@
-## Logging Shell Commands to Syslog on Secure Systems
+---
+layout: post
+title: Logging Shell Commands to Syslog on Compliant Systems
+date: 2010-12-07 12:07:00
+category: Sysadmin
+---
+
+## Logging Shell Commands to Syslog on Compliant Systems
 
 I had recently come across a blog post describing methods for capturing commands entered on the command line, and recording them to syslog.  Either by function() or by patching the actual shell itself.   I found this article because I was asked by my boss to find a way to add CLI logging to some hosts on our network, to support audits and accountability.
 Some of the environments I work on are more secure than average.  In a typical corporate environment, whether internet connected or not, there is generally no need or requirements to use system auditing to track all user actions.  Some government systems, whether classified or not, do require this, and some commercial systems in regulated industries, or who service government agencies, also require this level of auditing and accountability.  In some cases it can be a smart idea for non-regulated systems.  For instance, if you're a managed services company that uses a team of operators to manage multiple customer environments, there may be some value to tracking user activity.
