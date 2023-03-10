@@ -1,9 +1,7 @@
-## [Auditing] Logging Shell Commands to Syslog on Secure Systems
-
-This is a sample blog post. You can talk about all sorts of fun things here.
+## Logging Shell Commands to Syslog on Secure Systems
 
 I had recently come across a blog post describing methods for capturing commands entered on the command line, and recording them to syslog.  Either by function() or by patching the actual shell itself.   I found this article because I was asked by my boss to find a way to add CLI logging to some hosts on our network, to support audits and accountability.
-Some of the environments I work on are more secure than usual.  In a typical corporate environment, whether internet connected or not, there is generally no need or requirements to use system auditing to track all user actions.  Some government systems, whether classified or not, do require this, and some commercial systems in regulated industries, or who service government agencies, also require this level of auditing and accountability.  In some cases it can be a smart idea for non-regulated systemd.  For instance, if you're a managed services company that uses a team of operators to manage multiple customer environments, there may be some value to tracking user activity.
+Some of the environments I work on are more secure than average.  In a typical corporate environment, whether internet connected or not, there is generally no need or requirements to use system auditing to track all user actions.  Some government systems, whether classified or not, do require this, and some commercial systems in regulated industries, or who service government agencies, also require this level of auditing and accountability.  In some cases it can be a smart idea for non-regulated systems.  For instance, if you're a managed services company that uses a team of operators to manage multiple customer environments, there may be some value to tracking user activity.
 
 Most operating environments these days come with some sort of auditing facility, however I have found that these are usually fairly unintuitive, and most people that implement auditing do so by following a How-To, and then end up not actually having a SME on staff when things do go wrong.  Audit logs can also consume a lot of space, so lots of sysadmins just delete old audit logs in an effort to reclaim disk space.
 
@@ -52,7 +50,7 @@ if (strlen(line) < SYSLOG_MAXLEN)
 
 Resulting in log entries like:
 ```bash
-Dec  7 23:13:02 linux bash: HISTORY: PID=1752 UID=1001 ls
+Dec  7 23:13:02 linux bash: HISTORY: PID=1752 UID=1001 ls /tmp/
 ```
 
 I don't really like that format, either. I'd rather see usernames and commands, and have the pid over on the left with the 'bash:'. This was a pretty simple change in code to:
@@ -63,7 +61,7 @@ I don't really like that format, either. I'd rather see usernames and commands, 
 ```
 This results in log entries that look like:
 ```bash
-Dec  7 23:26:39 linux bash[1846]: [tkennedy] ls
+Dec  7 23:26:39 linux bash[1846]: [tkennedy] ls /tmp/
 ```
 
 To me, this makes for a more readable log file.
