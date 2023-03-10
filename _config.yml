@@ -1,0 +1,42 @@
+title: "TK's Notebook"
+author: "TK"
+description: "I forget stuff if I don't write it down"
+
+# Email / Social media user names used by the minima theme:
+# All of these are optional and can be removed or commented out
+email: "tim@timkenedy.net"
+twitter_username: "timkennedy"
+github_username: "tksunw"
+linkedin_username: "timkennedy"
+stackoverflow_username: "timkennedy"
+
+#########################################################################################
+######### Nothing below needs to be changed (unless you know what you're doing) #########
+#########################################################################################
+# theme: minima
+remote_theme: jekyll/minima
+
+markdown: kramdown
+highlighter: rouge
+
+rss: rss
+
+header_pages:
+  - about.md
+  - archive.md
+    
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-remote-theme
+
+titles_from_headings:
+  strip_title: true
+  collections: true
+
+defaults:
+  - scope:
+      path: ""
+      type: post
+    values:
+      tags: Other
