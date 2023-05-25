@@ -3,13 +3,13 @@
 #
 
 # Name of your site (displayed in the header)
-name: Your Name
+name: Tim Kennedy
 
 # Short bio or description (displayed in the header)
-description: Web Developer from Somewhere
+description: Just Another Factotum
 
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
-avatar: https://raw.githubusercontent.com/barryclark/jekyll-now/master/images/jekyll-logo.png
+avatar: https://www.gravatar.com/avatar/f31bc49f161f29822680069fde3da80c?s=256&d=identicon&r=PG
 
 #
 # Flags below are optional
@@ -18,18 +18,15 @@ avatar: https://raw.githubusercontent.com/barryclark/jekyll-now/master/images/je
 # Includes an icon in the footer for each username you enter
 footer-links:
   dribbble:
-  email:
+  email: tim@timkennedy.net
   facebook:
   flickr:
-  github: barryclark/jekyll-now
+  github: tksunw
   instagram:
   linkedin:
   pinterest:
-  rss: # just type anything here for a working RSS icon
-  twitter: jekyllrb
-  stackoverflow: # your stackoverflow profile, e.g. "users/50476/bart-kiers"
-  youtube: # channel/<your_long_string> or user/<user-name>
-  googleplus: # anything in your profile username that comes after plus.google.com/
+  twitter: tksunw
+  stackoverflow: users/5699/tim-kennedy
 
 
 # Enter your Disqus shortname (not your username) to enable commenting on posts
@@ -41,7 +38,7 @@ google_analytics:
 
 # Your website URL (e.g. http://barryclark.github.io or http://www.barryclark.co)
 # Used for Sitemap.xml and your RSS feed
-url:
+  url: https://tksunw.github.io
 
 # If you're hosting your site at a Project repository on GitHub pages
 # (http://yourusername.github.io/repository-name)
