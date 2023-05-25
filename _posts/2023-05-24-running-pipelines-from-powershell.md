@@ -6,11 +6,9 @@ categories: azure, powershell
 
 We have some Azure DevOps pipelines that run some comparisons between Azure SQL Databases running in production
 and their DR replicas.  The pipelines do things like make sure the number of objects in each database are the same,
-or within a predefined tolerance (as replication can (and will) lag).
+or within a predefined tolerance (as replication can (and will) lag).  No problem if you're comparing 1 database between two sites.  But when you're running a full set of comparisons over several servers and hundreds of databases between several sites/tiers/sandboxes, it can be time consuming.  So time consuming, in fact, that my boss decided he didn't want to do it anymore, and kindly dropped it on me. :)
 
-First step, gather statistics from the production database; second step, gather statistics from the replica database; Third step insert the results into another database that is used to track these operatations.
-
-Usually, the pipeline is run manually, and requires a number of Parameters to be set, such as 'Test Name', 'Test Description', 'Application' (that's the db being compared), 'Primary Site', 'Secondary Site'.  If we want to run a full suite against even just one of our Azure SQL Servers, this could take quite a while.  Load the page in the browser, click 'Run Pipeline', fill out text fields, make appropriate selections, and click 'Run'.  No problem if you're comparing 1 database between two sites.  But when you're running a full set of comparisons over several servers, between several sites/tiers/sandboxes, it can be time consuming.  So time consuming, in fact, that my boss decided he didn't want to do it anymore, and kindly dropped it on me. :)
+Usually, the pipeline is run manually, and requires a number of Parameters to be set, such as 'Test Name', 'Test Description', 'Application' (that's the db being compared), 'Primary Site', 'Secondary Site'.  If we want to run a full suite against even just one of our Azure SQL Servers, this could take quite a while.  Load the page in the browser, click 'Run Pipeline', fill out text fields, make appropriate selections, and click 'Run'.  
 
 ![Pipeline Parameters in Azure DevOps](/images/run-pipeline-parameters.png)
 
