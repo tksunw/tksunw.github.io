@@ -13,8 +13,7 @@ stackoverflow_username: "timkennedy"
 #########################################################################################
 ######### Nothing below needs to be changed (unless you know what you're doing) #########
 #########################################################################################
-# theme: minima
-remote_theme: jekyll/minima
+remote_theme: pages-themes/hacker@v0.2.0
 
 markdown: kramdown
 highlighter: rouge
