@@ -1,6 +1,6 @@
 ---
 layout: page
-title: About
+title: About Me
 permalink: /about/
 ---
 I am, in reverse chronological order, a father, husband, brother, and son.
