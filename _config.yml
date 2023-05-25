@@ -13,9 +13,15 @@ stackoverflow_username: "timkennedy"
 #########################################################################################
 ######### Nothing below needs to be changed (unless you know what you're doing) #########
 #########################################################################################
-# remote_theme: minima
+remote_theme: minima
 # remote_theme: pages-themes/hacker@v0.2.0
-remote_theme: pages-themes/midnight@v0.2.0
+# remote_theme: pages-themes/midnight@v0.2.0
+
+minima:
+  skin: dark
+  social_links:
+    - { platform: github,  user_url: "https://github.com/jekyll/jekyll" }
+    - { platform: twitter, user_url: "https://twitter.com/jekyllrb" }
 
 markdown: kramdown
 highlighter: rouge
