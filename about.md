@@ -3,16 +3,17 @@ layout: page
 title: About
 permalink: /about/
 ---
+I am, in reverse chronological order, a father, husband, brother, and son.
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
+In my personal life, I enjoy cooking, reading books, drinking wine, and spending time in the outdoors.
 
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
+In my professional life I am essentially a "Solutions Architect", but which I mean I use 20+ years of experience
+in networking, storage systems, various server operating systems, and various virtualization technologies to design
+solutions to business needs.
 
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
+I believe that automation is the key to predictable and repeatable outcomes, and my main goal at any job is to
+automate my way out of that job.
 
-
-[jekyll-organization]: https://github.com/jekyll
+This blog probably won't have any of the big design solutions I've worked on for employers, but will instead have
+tidbits that have been useful to me over the years.  This is an online notebook mainly for myself, because I forget
+things if I don't write them down.  If you get some use out of it, that's great, too.
