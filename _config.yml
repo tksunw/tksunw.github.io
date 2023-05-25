@@ -1,7 +1,7 @@
-title: Your awesome title
+title: Notes to myself
 author:
-  name: GitHub User
-  email: your-email@domain.com
+  name: Tim Kennedy
+  email: tim@timkennedy.net
 
 # The `>` after `description:` means to ignore line-breaks until next key.
 # If you want to omit the line-break after the end of text, use `>-` instead.
@@ -21,6 +21,7 @@ plugins:
 # Theme-specific settings
 
 minima:
+  skin: dark
   # Minima date format.
   # Refer to https://shopify.github.io/liquid/filters/date/ if you want to customize this.
   #
