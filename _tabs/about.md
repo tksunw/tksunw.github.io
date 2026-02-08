@@ -5,7 +5,6 @@ order: 4
 title: About Me
 ---
 
----
 I am, in reverse chronological order, a father, husband, brother, and son.
 
 In my personal life, I enjoy cooking, reading books, drinking wine, and spending time in the outdoors.
