@@ -1,6 +1,6 @@
 ---
 title: "Building a Safer Diceware Password Generator in PowerShell"
-date: 2026-02-09 20:45:00 -0500
+date: 2026-02-08 20:45:00 -0500
 categories: [Automation]
 tags: [powershell, security, passwords, passphrases, diceware]
 ---
