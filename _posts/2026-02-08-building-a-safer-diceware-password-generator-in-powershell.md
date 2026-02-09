@@ -5,56 +5,95 @@ categories: [Automation]
 tags: [powershell, security, passwords, passphrases, diceware]
 ---
 
-I recently cleaned up and hardened a small PowerShell utility in my tools repo: `Get-DiceWords.ps1`.
+I recently cleaned up and hardened a small PowerShell utility that generates [Diceware](https://en.wikipedia.org/wiki/Diceware)-style passphrases using the EFF large wordlist. The idea is simple: string together several randomly chosen words to create a passphrase that's both strong and memorable.
 
-The script generates Diceware-style passphrases using the EFF large wordlist and is now organized under its own folder:
+The script lives in my tools repo:
 
-- `DiceWords-Password-Generator/Get-DiceWords.ps1`
+- [`tksunw/tools/DiceWords-Password-Generator/Get-DiceWords.ps1`](https://github.com/tksunw/tools/tree/main/DiceWords-Password-Generator)
+
+## Why Diceware?
+
+A 6-word Diceware passphrase has about 77.5 bits of entropy — roughly 221 quintillion possible combinations. That's strong enough for most real-world use, and you can actually remember it because it's made of real words.
+
+```powershell
+PS> .\Get-DiceWords.ps1 -NumberofWords 6
+
+Your words are:
+Matador Wayside Reboot Unsteady Imitate Snag
+
+Your passphrase is:
+MatadorWaysideRebootUnsteadyImitateSnag
+
+# of possible passwords with 6 rolls:
+Entropy: 77.55 bits
+~ 221.07 quintillion
+```
+
+Compare that to a random 12-character password that you'll never remember and will paste from a clipboard anyway.
 
 ## Why I Reworked It
 
-The original goal was simple: generate memorable passphrases that are still strong enough for real-world use.
+The original script worked, but as I reviewed it, a few things bugged me:
 
-As I reviewed the script, a few things stood out:
+- **Biased randomness** — The original used `Get-Random`, which isn't cryptographically secure. The updated version uses `System.Security.Cryptography.RandomNumberGenerator.GetInt32()`, which produces unbiased, cryptographically secure random numbers.
 
-- random generation should be unbiased and cryptographically secure
-- downloaded wordlists should be validated instead of trusted blindly
-- output should reflect the actual entropy model being used
-- docs should make operational behavior obvious
+- **No wordlist validation** — The script downloaded a wordlist from the EFF and trusted it blindly. Now it validates the structure strictly: exactly 7,776 entries, valid five-digit dice codes (digits 1–6 only), no duplicates, no empty words.
 
-## Security Improvements
+- **No tamper detection** — A trust-on-first-use (TOFU) model now saves a SHA-256 hash of the wordlist on first download. On subsequent runs, the hash is verified. If the wordlist has changed upstream, the script refuses to run unless you explicitly opt in with `-AllowWordlistChange`.
 
-The updated script now:
+- **Inaccurate entropy reporting** — The original entropy calculation didn't account for the script's duplicate-prevention behavior (each word is unique within a passphrase). The math now correctly reflects permutations without replacement.
 
-- uses `System.Security.Cryptography.RandomNumberGenerator.GetInt32()` to avoid modulo bias
-- validates wordlist structure strictly (7,776 entries, valid `11111`-`66666` keys, no duplicates, non-empty words)
-- uses a local trust-on-first-use hash file (`eff_large_wordlist.sha256`) for managed wordlists
-- requires explicit opt-in (`-AllowWordlistChange`) before accepting a changed managed wordlist hash
+## Meeting Complexity Requirements
 
-This is a practical middle ground when an upstream source does not publish an official signed hash.
-
-## Behavior and Accuracy Improvements
-
-A couple of operational details were fixed as well:
-
-- entropy/combinations now match the script's unique-roll behavior
-- download progress preference is restored safely
-- path handling works correctly for custom wordlist file locations
-
-## Usage
+Some sites and systems demand uppercase, lowercase, numbers, and symbols — even when your passphrase is already strong enough without them. The `-AddSpecialsAndNumbers` switch handles this by replacing the spaces between words with random special characters and appending two random digits, all using the same cryptographic RNG:
 
 ```powershell
-pwsh ./DiceWords-Password-Generator/Get-DiceWords.ps1 -NumberofWords 6
+PS> .\Get-DiceWords.ps1 -NumberofWords 6 -AddSpecialsAndNumbers
+
+Your words are:
+Matador Wayside Reboot Unsteady Imitate Snag
+
+Your passphrase is:
+MatadorWaysideRebootUnsteadyImitateSnag
+
+Your complex password is:
+Matador^Wayside$Reboot!Unsteady&Imitate#Snag47
 ```
 
-If the managed wordlist content changes and you trust the new version:
+That satisfies complexity policies while keeping the passphrase memorable.
+
+## Structured Output
+
+The script returns a `PSCustomObject`, so you can use it interactively and see the formatted display, or capture the result in a script:
 
 ```powershell
-pwsh ./DiceWords-Password-Generator/Get-DiceWords.ps1 -AllowWordlistChange
+$result = .\Get-DiceWords.ps1 -NumberofWords 4 -AddSpecialsAndNumbers
+$result.ComplexPassword   # just the complex password string
 ```
+
+The object includes `Words`, `PassPhrase`, `ComplexPassword`, `EntropyBits`, and `Combinations`.
+
+## Parameters
+
+| Parameter | Description |
+|-----------|-------------|
+| `-NumberofWords` | Number of words in the passphrase (1–20, default 2) |
+| `-AddSpecialsAndNumbers` | Replace spaces with random special characters and append two random digits |
+| `-WordListFile` | Path to a custom EFF wordlist file (auto-downloaded if omitted) |
+| `-AllowWordlistChange` | Accept a changed wordlist hash (required if managed wordlist content differs from the trusted hash) |
+
+## How It Works
+
+1. Downloads the EFF large wordlist if not already cached (platform-specific default paths for Windows, macOS, and Linux)
+2. Validates the wordlist structure and verifies its SHA-256 hash
+3. Generates unique five-digit dice rolls using the cryptographic RNG
+4. Maps each roll to a word, title-cases them, and concatenates into a passphrase
+5. Optionally generates a complex password variant with special characters and digits
+6. Reports the entropy and total possible combinations
+7. Returns a `PSCustomObject` with all results
+
+The script works offline after the initial download — the wordlist is cached locally and re-verified on each run.
 
 ## Source
 
-The script and README live in my tools repository:
-
-- [tksunw/tools](https://github.com/tksunw/tools)
+- [`tksunw/tools/DiceWords-Password-Generator`](https://github.com/tksunw/tools/tree/main/DiceWords-Password-Generator)
