@@ -13,8 +13,8 @@ An Azure Context object contains information about the Account that was used to 
 
 ```powershell
 PS> Get-AzContext | fl *
-Name               : TK-PRD (yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy) - tim@timkennedy.net
-Account            : tim@timkennedy.net
+Name               : TK-PRD (yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy) - tim@example.com
+Account            : tim@example.com
 Environment        : AzureCloud
 Subscription       : yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy
 Tenant             : zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzzzzzz
