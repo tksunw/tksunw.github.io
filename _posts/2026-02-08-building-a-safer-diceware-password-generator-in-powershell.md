@@ -9,7 +9,7 @@ I recently cleaned up and hardened a small PowerShell utility that generates [Di
 
 The script lives in my tools repo:
 
-- [`tksunw/tools/DiceWords-Password-Generator/Get-DiceWords.ps1`](https://github.com/tksunw/tools/tree/main/DiceWords-Password-Generator)
+- [`tksunw/tools/DiceWords-Password-Generator/Get-DiceWords.ps1`](https://github.com/tksunw/tools/tree/master/DiceWords-Password-Generator)
 
 ## Why Diceware?
 
@@ -96,4 +96,4 @@ The script works offline after the initial download — the wordlist is cached l
 
 ## Source
 
-- [`tksunw/tools/DiceWords-Password-Generator`](https://github.com/tksunw/tools/tree/main/DiceWords-Password-Generator)
+- [`tksunw/tools/DiceWords-Password-Generator`](https://github.com/tksunw/tools/tree/master/DiceWords-Password-Generator)

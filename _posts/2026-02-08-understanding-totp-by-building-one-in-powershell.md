@@ -9,7 +9,7 @@ You've probably used a TOTP code thousands of times — open your authenticator 
 
 The result is `Get-TOTPDigits.ps1`, a PowerShell script that generates RFC 6238-compliant Time-based One-Time Passwords. It's not meant to replace your authenticator app. It's a learning tool that made the whole mechanism click for me.
 
-- [`tksunw/tools/TOTP/Get-TOTPDigits.ps1`](https://github.com/tksunw/tools/tree/main/TOTP)
+- [`tksunw/tools/TOTP/Get-TOTPDigits.ps1`](https://github.com/tksunw/tools/tree/master/TOTP)
 
 ## What Is TOTP?
 
@@ -83,6 +83,6 @@ This is a learning tool and a convenience script, not a replacement for a proper
 
 ## Source
 
-- [`tksunw/tools/TOTP`](https://github.com/tksunw/tools/tree/main/TOTP)
+- [`tksunw/tools/TOTP`](https://github.com/tksunw/tools/tree/master/TOTP)
 - [RFC 6238 — TOTP: Time-Based One-Time Password Algorithm](https://tools.ietf.org/html/rfc6238)
 - [RFC 4226 — HOTP: An HMAC-Based One-Time Password Algorithm](https://tools.ietf.org/html/rfc4226)
