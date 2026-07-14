@@ -5,7 +5,7 @@ categories: [Automation]
 tags: [macos, swift, speech, dictation, privacy, apple]
 ---
 
-Like most people, I talk faster than I type. When I talk, my ideas tend to flow more naturally than when I type because typing forces my brain to try and organize my thoughts into words that make sense.  Tools like Wispr Flow and Whispersync already figured this out: hold a key, speak, release, and your words appear at the cursor. The catch is that your voice goes to their servers. Every offhand remark, every half-dictated Slack message, every NDA protected dictation, all of it leaves your machine and goes somewhere you have no control over, to someone that you just have to blindly trust is going to uphold their data privacy claims.
+Like most people, I talk faster than I type. When I talk, my ideas tend to flow more naturally than when I type because typing forces my brain to try and organize my thoughts into words that make sense.  Tools like Wispr Flow and Whispersync already figured this out: hold a key, speak, release, and your words appear at the cursor all shiny and polished. The catch is that your voice goes to their servers. Every offhand remark, every half-dictated Slack message, every NDA protected dictation, all of it leaves your machine and goes somewhere you have no control over, to someone that you just have to blindly trust is going to uphold their data privacy claims.
 
 macOS 26 shipped the `SpeechAnalyzer` and `SpeechTranscriber` APIs, which expose the same on-device speech engine that powers system dictation. That removed the only technical excuse for cloud round-trips. So I built InterNos: a menu bar app that does the whole hold-speak-release workflow with zero network calls in the transcription path.
 
