@@ -5,17 +5,17 @@ categories: [Automation]
 tags: [macos, swift, speech, dictation, privacy, apple]
 ---
 
-I talk faster than I type. Tools like Wispr Flow figured this out years ago: hold a key, speak, release, and your words appear at the cursor. The catch is that your voice goes to their servers. Every offhand remark, every half-dictated Slack message, every muttered thing near a password manager, all of it leaves your machine.
+Like most people, I talk faster than I type. When I talk, my ideas tend to flow more naturally than when I type because typing forces my brain to try and organize my thoughts into words that make sense.  Tools like Wispr Flow and Whispersync already figured this out: hold a key, speak, release, and your words appear at the cursor. The catch is that your voice goes to their servers. Every offhand remark, every half-dictated Slack message, every NDA protected dictation, all of it leaves your machine and goes somewhere you have no control over, to someone that you just have to blindly trust is going to uphold their data privacy claims.
 
 macOS 26 shipped the `SpeechAnalyzer` and `SpeechTranscriber` APIs, which expose the same on-device speech engine that powers system dictation. That removed the only technical excuse for cloud round-trips. So I built InterNos: a menu bar app that does the whole hold-speak-release workflow with zero network calls in the transcription path.
 
 - Repo: [github.com/tksunw/InterNos](https://github.com/tksunw/InterNos) (MIT, signed and notarized DMG in [Releases](https://github.com/tksunw/InterNos/releases))
 
-The name is Latin, roughly "between us." Dictation that stays between you and your Mac.
+The name is Latin, roughly "between us." Dictation that stays between you and your Mac.  Transcriptions are never sent to a cloud for processing or post-processing.
 
 ## What it does
 
-Hold Right Option (configurable, toggle mode available), speak, release. The transcript is inserted at the cursor in whatever app has focus. Measured release-to-inserted-text latency runs 50 to 70 milliseconds for typical utterances, fast enough that it feels like the text was already there.
+Hold the right Option key (configurable, toggle mode available), speak, release. The transcript is inserted at the cursor in whatever app has focus. Measured release-to-inserted-text latency runs 50 to 70 milliseconds for typical speech patterns.
 
 The pipeline is three stages, all local:
 
@@ -23,27 +23,29 @@ The pipeline is three stages, all local:
 2. **Transcribe.** Apple's `SpeechAnalyzer` plus `SpeechTranscriber`, streaming results as you speak.
 3. **Insert.** Clipboard swap with a synthetic ⌘V, then your original clipboard is restored.
 
-The insert stage checks for macOS Secure Input first. If a password field has focus, InterNos refuses to inject anything, plays the error sound, and leaves the transcript on the clipboard so nothing is lost. A dictation tool that types into password fields is a keylogger with extra steps.
+The insert stage checks for macOS Secure Input first. If a password field has focus, InterNos refuses to inject anything, plays the error sound, and leaves the transcript on the clipboard so nothing is lost. A dictation tool that types into password fields is just a keylogger with extra steps.
 
-There's also a small post-processing pass for spoken commands: "hashtag yard" becomes `#yard`, "at sign" becomes `@`, and "emoji thumbs up" becomes 👍. The emoji substitution requires the spoken word "emoji" as a prefix, so telling someone "she sent me a smiley face" stays literal text. That prefix rule sounds obvious in hindsight; it wasn't in the first draft.
+There's also a small post-processing pass for spoken commands.  For example: "hashtag yard" becomes `#yard`, "at sign" becomes `@`, and "emoji thumbs up" becomes 👍. The emoji substitution requires the spoken word "emoji" as a prefix, so telling someone "she sent me a smiley face" stays literal text.  Other keywords that work like this include "start quote" and "end quote", "open parenthesis" and "close parenthesis", and "verbatim" for not post-processing whatever is said next.
+
+There are also two custom lists, stored in the user Library.  The first is **Replacements**, which allow you to set some static replacements for things the transcriber gets wrong or doesn't know about.  For example "cube control" can be fixed as "kubectl" or "t k sun w" is fixed as "tksunw".  The second list is **Snippets** which works like keyboard shortcuts, so I could set the phrase "t k g h" to be replaced with "https://github.com/tksunw".
 
 ## Things that bit me
 
-This was my first serious macOS app, and the Apple stack has some sharp edges that produce silence instead of errors.
+This was my first serious macOS app, and the Apple stack has some sharp edges that produce silence instead of errors. I very literally could not have built this without Claude's assistance, and the release of Fable-5 seemed like a perfect way to put Fable through it's paces.  Building this on my own would have taken me months of evenings and weekends. For example:
 
-**Audio format mismatches fail silently.** The analyzer wants 16 kHz mono Int16. The mic delivers 48 kHz Float32. Feed it the wrong format and you get empty transcription results, not an exception. I burned a chunk of a day on this before writing a spike CLI that validated every stage of the pipeline in isolation.
+**Audio format mismatches fail silently.** The analyzer wants 16 kHz mono Int16. The mic delivers 48 kHz Float32. Feed it the wrong format and you get empty transcription results, not an exception. Fable burned a chunk of a day on this before writing a spike CLI that validated every stage of the pipeline in isolation.  Silent failures are the worst in any scenario.
 
 **`AVAudioEngine` goes stale.** Reuse an engine across utterances after stop/removeTap and it silently yields empty transcripts. A fresh engine per utterance fixed it.
 
 **Hardened runtime plus microphone needs an entitlement.** A non-sandboxed app signed with `--options runtime` must carry `com.apple.security.device.audio-input`. Without it, the mic permission prompt fires, but no grant persists and the app never appears in the Microphone privacy pane. Accessibility and Input Monitoring don't need entitlements, so those worked while mic didn't, which is a confusing diagnostic signature. This shipped broken in v1.0.0 and got fixed in v1.0.1 within hours of my own first install.
 
-**TCC ties grants to bundle ID, path, and code signature.** A debug build sharing a bundle ID with the installed release copy breaks Input Monitoring and Accessibility in ways the privacy panes won't admit: the toggle shows granted, the app can't see it. Debug builds now use a separate bundle ID and a separate output path. Related: `CGRequestListenEventAccess()` can fail to create a TCC record at all, leaving the app absent from the Input Monitoring pane with no way for the user to grant anything. The reliable workaround is attempting a throwaway `CGEvent.tapCreate` when the request reports not-granted, which forces the record to exist.
+**TCC ties grants to bundle ID, path, and code signature.** A debug build sharing a bundle ID with the installed release copy breaks Input Monitoring and Accessibility in ways the privacy panes won't admit: the toggle shows granted, the app can't see it. Debug builds now use a separate bundle ID and a separate output path. Related: `CGRequestListenEventAccess()` can fail to create a TCC record at all, leaving the app absent from the Input Monitoring pane with no way for the user to grant anything. The reliable workaround is attempting a throwaway `CGEvent.tapCreate` when the request reports not-granted, which forces the record to exist.  This one was particularly annoying, even with Fable's help.
 
-**Styled DMG installers are cursed.** The classic Finder AppleScript layout trick fails silently in headless builds, and baking a .DS_Store doesn't survive because the background image reference is a Finder alias tied to the original volume's identity. `dmgbuild` writes the .DS_Store programmatically per build and just works.
+**Styled DMG installers are cursed.** The classic Finder AppleScript layout trick fails silently in headless builds, and baking a .DS_Store doesn't survive because the background image reference is a Finder alias tied to the original volume's identity. `dmgbuild` writes the .DS_Store programmatically per build and just works. But a nice installer is pretty cool to have when you finally get it right.
 
 ## Privacy posture
 
-No accounts, no telemetry, no transcript storage. Settings are the only persisted state. The speech model is downloaded once by macOS itself from Apple's asset CDN and shared system-wide. The only optional network call in the whole app is "Check for Updates," which hits the GitHub releases API on demand, with an off-by-default toggle for checking at launch. All of this is verifiable with Little Snitch or any packet monitor, which is the point: a privacy claim you can't verify is marketing.
+No accounts, no telemetry, no transcript storage. Settings are the only persisted state. The speech model is downloaded once by macOS itself from Apple's asset CDN and shared system-wide. The only optional network call in the whole app is "Check for Updates," which hits the GitHub releases API on demand, with an off-by-default toggle for checking at launch. All of this is verifiable with Little Snitch or any packet monitor, which is the point: a privacy claim you can't verify is marketing. 
 
 ## Requirements and install
 
@@ -73,6 +75,8 @@ A week of dogfooding produced two more releases.
 - **Smart cleanup (opt-in, off by default).** Removes filler, repetitions, and false starts, and applies self-corrections ("meet at five, no, six" becomes "meet at six"). Runs on-device via Apple Intelligence Foundation Models, bounded by a two-second deadline with output validation, and always falls back to the deterministic transcript. Same privacy posture: nothing leaves the machine.
 - **Last-dictation recovery.** Menu bar items to copy or re-paste the last transcript, held in memory only.
 
-One honesty fix worth calling out: the README and privacy policy now say plainly that the transcript passes briefly through the general pasteboard during insertion, where Universal Clipboard or a clipboard manager could observe it. InterNos's own network behavior is unchanged (still zero calls in the dictation path), but a privacy tool should describe its actual mechanics, not just the flattering parts.
+**Final Thoughts** 
+
+Both the README and privacy policy now say plainly that the transcript passes briefly through the general pasteboard during insertion, where Universal Clipboard or a clipboard manager could observe it. InterNos's own network behavior is unchanged (still zero calls in the dictation path), but a privacy tool should describe its actual mechanics, not just the flattering parts.
 
 Full details in the [CHANGELOG](https://github.com/tksunw/InterNos/blob/main/CHANGELOG.md).
