@@ -58,3 +58,21 @@ cd InterNos/App
 ```
 
 My wife and son use it daily, which is a higher bar than any test suite. Issues and PRs welcome, especially additions to the emoji table.
+
+## Update: v1.1 and v1.2
+
+A week of dogfooding produced two more releases.
+
+**v1.1 is all bug fixes**, mostly races in the dictation lifecycle. Back-to-back dictations now always insert in recording order even when a later utterance finishes transcribing first. Clipboard restore only puts your original clipboard back if the pasteboard still holds the injected transcript, so it can't clobber something you copied right after dictating. The transcript pastes only into the app that was frontmost when you released the hotkey; switch apps during finalization and InterNos refuses, keeping the text on the clipboard instead. Pause now cancels all in-flight work. The injected transcript is also tagged with the standard transient/concealed pasteboard markers so well-behaved clipboard managers skip it.
+
+**v1.2 adds the customization layer:**
+
+- **Personal dictionary.** Spoken-phrase replacements ("cube control" becomes `kubectl`), matched whole-word and case-insensitive, with JSON import/export. This is the answer to `AnalysisContext.contextualStrings` being inert (see above): if the engine won't take a custom vocabulary, post-process one.
+- **Voice-triggered snippets.** "Snippet address" inserts saved text verbatim. Static text only, on purpose.
+- **Structured voice commands.** "New line", "new paragraph", "bullet point", "numbered item" with automatic numbering, quotes and parentheses, plus a "literal" escape when you want the words themselves.
+- **Smart cleanup (opt-in, off by default).** Removes filler, repetitions, and false starts, and applies self-corrections ("meet at five, no, six" becomes "meet at six"). Runs on-device via Apple Intelligence Foundation Models, bounded by a two-second deadline with output validation, and always falls back to the deterministic transcript. Same privacy posture: nothing leaves the machine.
+- **Last-dictation recovery.** Menu bar items to copy or re-paste the last transcript, held in memory only.
+
+One honesty fix worth calling out: the README and privacy policy now say plainly that the transcript passes briefly through the general pasteboard during insertion, where Universal Clipboard or a clipboard manager could observe it. InterNos's own network behavior is unchanged (still zero calls in the dictation path), but a privacy tool should describe its actual mechanics, not just the flattering parts.
+
+Full details in the [CHANGELOG](https://github.com/tksunw/InterNos/blob/main/CHANGELOG.md).
